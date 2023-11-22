@@ -15,7 +15,6 @@ class UsersTest < ApplicationSystemTestCase
     click_on "New user"
 
     fill_in "Date of birth", with: @user.date_of_birth
-    fill_in "Email", with: @user.email
     fill_in "Gender", with: @user.gender
     check "Is admin" if @user.is_admin
     fill_in "Name", with: @user.name
@@ -31,7 +30,6 @@ class UsersTest < ApplicationSystemTestCase
     click_on "Edit this user", match: :first
 
     fill_in "Date of birth", with: @user.date_of_birth
-    fill_in "Email", with: @user.email
     fill_in "Gender", with: @user.gender
     check "Is admin" if @user.is_admin
     fill_in "Name", with: @user.name

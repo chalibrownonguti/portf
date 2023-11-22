@@ -1,0 +1,2 @@
+class FilteredWord < ApplicationRecord
+end

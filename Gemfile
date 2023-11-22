@@ -9,6 +9,7 @@ gem 'bcrypt', '~> 3.1', '>= 3.1.19'
 gem 'faker'
 # The original asset pipeline for Rails [https://github.com/rails/sprockets-rails]
 gem "sprockets-rails"
+gem 'profanity-filter'
 
 # Use sqlite3 as the database for Active Record
 gem "sqlite3", "~> 1.4"

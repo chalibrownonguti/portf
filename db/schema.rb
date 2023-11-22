@@ -10,27 +10,38 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_10_15_104145) do
+ActiveRecord::Schema[7.0].define(version: 2023_11_09_025417) do
+  create_table "filtered_words", force: :cascade do |t|
+    t.string "word"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "projects", force: :cascade do |t|
     t.string "title"
     t.text "description"
     t.boolean "is_public"
     t.boolean "is_featured"
+    t.integer "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "view_count"
+    t.boolean "archive", default: false
+    t.index ["user_id"], name: "index_projects_on_user_id"
   end
 
   create_table "users", force: :cascade do |t|
     t.string "name"
-    t.string "email"
     t.boolean "is_admin"
     t.string "profile_image"
     t.string "gender"
     t.date "date_of_birth"
+    t.string "email"
+    t.string "hashed_email"
     t.string "password_digest"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
 
+  add_foreign_key "projects", "users"
 end
