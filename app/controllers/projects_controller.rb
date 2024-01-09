@@ -1,4 +1,5 @@
 class ProjectsController < ApplicationController
+  # rescue_from ActionController::InvalidAuthenticityToken, with: :unauthorized
   before_action :set_project, only: %i[show edit update destroy]
   before_action -> { contains_filtered_word?(params[:title]) || contains_filtered_word?(params[:description]) }, only: %i[show edit update destroy]
   skip_before_action :authorize, only: [:index, :show]
@@ -23,13 +24,18 @@ class ProjectsController < ApplicationController
   # POST /projects or /projects.json
   def create
     # Check for profanity in the title and description
+  if !@current_user || !@current_user.is_admin?
+    render json: { errors: "no authorize to create" }, status: :unprocessable_entity
+    else
+    
 
     if contains_filtered_word?(params[:title]) || contains_filtered_word?(params[:description])
       render json: { errors: "Project contains a filtered word and cannot be created" }, status: :unprocessable_entity
       return
     end
 
-    project = Project.new(
+    project = Project.create(
+
       user_id: params[ :user_id],
       title: params[:title],
       description: params[:description],
@@ -37,14 +43,15 @@ class ProjectsController < ApplicationController
       is_featured: params[:is_featured],
       view_count: params[:view_count]
     )
+    # project.user_id = @current_user.id
 
-    if project.save
+    if project.valid?
       render json: project, status: :created
     else
       render json: { errors: project.errors.full_messages }, status: :unprocessable_entity
     end
   end
-
+end
   # PATCH/PUT /projects/1 or /projects/1.json
   def update
     project = Project.find_by(id: params[:id])
@@ -135,4 +142,10 @@ class ProjectsController < ApplicationController
 
       false
     end
+ 
+
+  # def unauthorized
+  #   render json: { "error": "not authorized" }, status: :unauthorized
+  # end
+
 end

@@ -12,10 +12,11 @@ class SessionController < ApplicationController
       #  puts "User: #{user.inspect}"
 
       if user && user.authenticate(password)
-         session[:user_id] = user.id
+         session[:user_id]=user.id
+         
          render json: { success: "signin success" }
       else
-         puts "Authentication failed for user: #{user.inspect}"
+         # puts "Authentication failed for user: #{user.inspect}"
          render json: { error: "wrong username/password" }
      end
    end
