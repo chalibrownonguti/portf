@@ -1,4 +1,6 @@
 class ProjectDeletionJob < ApplicationJob
+  #  skip_before_action :authorize, only: [:perform]
+   
   queue_as :low_priority
           #  :high_priority
 

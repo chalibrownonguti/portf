@@ -20,7 +20,10 @@ class User < ApplicationRecord
 
 
   # ... other model code ...
-
+  def as_json(options = {})
+    super(options.merge(except: [:password_digest, :password, :password_confirmation]))
+  end
+  
  private
 
   def hash_email

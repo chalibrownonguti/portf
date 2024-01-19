@@ -5,6 +5,7 @@ class CreateProjects < ActiveRecord::Migration[7.0]
       t.text :description
       t.boolean :is_public
       t.boolean :is_featured
+      t.boolean :is_approved, default: false
       
       t.references :user, foreign_key: true
       t.timestamps

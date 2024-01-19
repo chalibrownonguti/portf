@@ -22,6 +22,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_09_025417) do
     t.text "description"
     t.boolean "is_public"
     t.boolean "is_featured"
+    t.boolean "is_approved", default: false
     t.integer "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false

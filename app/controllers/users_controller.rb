@@ -50,28 +50,30 @@ end
       render json: { errors: user.errors.full_messages }, status: :unprocessable_entity
     end
   end
-  # Other controller actions and methods
-def update
-  user = User.find_by(id: params[:id])
- 
-  puts "Params received for update: #{params.inspect}" # Add this line for debugging
+        # Other controller actions and methods
+  def update
+    user = User.find_by(id: params[:id])
 
-  if user.update(
-    name: params[:name],
-    profile_image: params[:profile_image],
-    gender: params[:gender],
-    date_of_birth: params[:date_of_birth],
-    password: params[:password],
-    password_confirmation: params[:password_confirmation],
-    email: params[:email]
-  )
-    puts "User successfully updated: #{user.inspect}" # Add this line for debugging
-    render json: user, status: :ok
-  else
-    puts "Error updating user: #{user.errors.full_messages}" # Add this line for debugging
-    render json: { errors: user.errors.full_messages }, status: :unprocessable_entity
+    if user
+      if params[:password].present? && params[:password_confirmation].present?
+        # Handle password update
+        if user.update(password: params[:password], password_confirmation: params[:password_confirmation])
+          render json: user.as_json(except: [:password_digest, :password, :password_confirmation]), status: :ok
+        else
+          render json: { errors: user.errors.full_messages }, status: :unprocessable_entity
+        end
+      else
+        # Handle non-password updates (name, profile_image, etc.)
+        if user.update(user_params.except(:password, :password_confirmation))
+          render json: user.as_json(except: [:password_digest, :password, :password_confirmation]), status: :ok
+        else
+          render json: { errors: user.errors.full_messages }, status: :unprocessable_entity
+        end
+      end
+    else
+      render json: { error: "User not found" }, status: :not_found
+    end
   end
-end
 
 
 

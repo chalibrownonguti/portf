@@ -9,7 +9,11 @@ class ProjectsController < ApplicationController
     projects = Project.all
     render json:  projects.as_json(include: :user) 
   end
-
+  # get approved projects
+ def approvedprojects
+    projects = Project.where(is_approved: true)
+    render json:  projects.as_json(include: :user) 
+  end
   # GET /projects/1 or /projects/1.json
   def show
     project = Project.find_by(id: params[:id])
@@ -23,20 +27,18 @@ class ProjectsController < ApplicationController
 
   # POST /projects or /projects.json
   def create
-    # Check for profanity in the title and description
-  if !@current_user || !@current_user.is_admin?
-    render json: { errors: "no authorize to create" }, status: :unprocessable_entity
-    else
+   
+  # if !@current_user || !@current_user.is_admin?
+  #   render json: { errors: "not authorize to create" }, status: :unprocessable_entity
+  #   else
     
-
+  #  #Check for profanity in the title and description
     if contains_filtered_word?(params[:title]) || contains_filtered_word?(params[:description])
       render json: { errors: "Project contains a filtered word and cannot be created" }, status: :unprocessable_entity
       return
     end
 
-    project = Project.create(
-
-      user_id: params[ :user_id],
+    project = @current_user.projects.create(
       title: params[:title],
       description: params[:description],
       is_public: params[:is_public],
@@ -51,7 +53,7 @@ class ProjectsController < ApplicationController
       render json: { errors: project.errors.full_messages }, status: :unprocessable_entity
     end
   end
-end
+# end
   # PATCH/PUT /projects/1 or /projects/1.json
   def update
     project = Project.find_by(id: params[:id])
@@ -101,6 +103,31 @@ end
       render json: { errors: "Project not found" }, status: :not_found
     end
   end
+
+  # is approve by admins only
+   def approve
+      current_user= User.find_by(id: session[:user_id])
+        if current_user.is_admin==true
+            project = Project.find_by(id: params[:id])
+
+            if project
+              # Check for profanity in the updated title and description
+              if contains_filtered_word?(params[:title]) || contains_filtered_word?(params[:description])
+                render json: { errors: "Project contains a filtered word and cannot be updated" }, status: :unprocessable_entity
+                return
+              end
+
+              if project.update(is_approved: true)
+                render json: { success: "Project approved to be seen by users" }, status: :created
+              else
+                render json: { errors: project.errors.full_messages }, status: :unprocessable_entity
+              end
+            else
+              render json: { errors: "Project not found" }, status: :not_found
+             end
+            else render json: { errors: "only admins" }, status: :not_found
+  end
+end
 
   # DELETE /projects/1 or /projects/1.json
 
