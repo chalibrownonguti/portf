@@ -34,6 +34,7 @@ end
   # POST /users or /users.json
   def create
     user = User.create(
+      # is_admin: true,
       name: params[:name],
       profile_image: params[:profile_image],
       gender: params[:gender],

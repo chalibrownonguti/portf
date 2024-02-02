@@ -4,13 +4,14 @@ class SessionController < ApplicationController
 
      def signin
       name = params[:name]
+      email = params[:email]
       password = params[:password]
 
       # puts "Name: #{name}"
       # puts "Password: #{password}"
 
       user = User.find_by(name: name)
-      #  puts "User: #{user.inspect}"
+       puts "User: #{user.inspect}"
 
       if user && user.authenticate(password)
          session[:user_id]=user.id
