@@ -10,7 +10,7 @@ class SessionController < ApplicationController
       # puts "Name: #{name}"
       # puts "Password: #{password}"
 
-      user = User.find_by(name: name)
+      user = User.find_by(name: name, email: email)
        puts "User: #{user.inspect}"
 
       if user && user.authenticate(password)

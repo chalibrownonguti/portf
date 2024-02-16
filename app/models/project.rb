@@ -10,6 +10,6 @@ class Project < ApplicationRecord
 
   def delete_after_sometimes
     update(archive: true)
-    ProjectDeletionJob.set(wait: 17.seconds).perform_later(id)
+    ProjectDeletionJob.set(wait: 1.hours).perform_later(id)
   end
 end

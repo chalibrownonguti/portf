@@ -19,7 +19,7 @@ class ProjectsController < ApplicationController
     project = Project.find_by(id: params[:id])
 
     if project
-      render json: project
+      render json: project.as_json(include: :user)
     else
       render json: { error: "Project not found" }, status: :not_found
     end
@@ -148,7 +148,7 @@ end
   private
   # Use callbacks to share common setup or constraints between actions.
   def set_project
-    @project = Project.find(params[:id])
+    project = Project.find(params[:id])
   end
 
   # Only allow a list of trusted parameters through.
@@ -156,7 +156,7 @@ end
     params.require(:project).permit(:title, :description, :is_public, :is_featured, :view_count)
   end
 
-  # Check for profanity using the 'profanity-filter' gem
+
   # Check for profanity using the 'profanity-filter' gem
     def contains_filtered_word?(text)
       filtered_words = FilteredWord.pluck(:word)
@@ -169,10 +169,7 @@ end
 
       false
     end
- 
-
   # def unauthorized
   #   render json: { "error": "not authorized" }, status: :unauthorized
   # end
-
 end
