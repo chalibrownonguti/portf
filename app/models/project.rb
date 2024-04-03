@@ -1,6 +1,8 @@
 class Project < ApplicationRecord
   belongs_to :user
   # include ProfanityFilter
+  validates_format_of :image_url, with: %r{\A(?:.+\.(png|jpe?g|gif|mp4))\z}i, message: "can only be png, jpg, jpeg, gif, or mp4 images/videos."
+
 
   validates :title, uniqueness: true
   validates :description, presence: true

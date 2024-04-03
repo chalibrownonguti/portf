@@ -1,0 +1,7 @@
+# config/cloudinary.yml
+
+production:
+  cloud_name: "djjcv4lql"
+  api_key: "987689736191942"
+  api_secret: "aaDZlUwZwKVhwyjxtYTtdGRCeAg"
+  secure: true

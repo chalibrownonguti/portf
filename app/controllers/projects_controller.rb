@@ -1,8 +1,7 @@
 class ProjectsController < ApplicationController
-  # rescue_from ActionController::InvalidAuthenticityToken, with: :unauthorized
-  before_action :set_project, only: %i[show edit update destroy]
-  before_action -> { contains_filtered_word?(params[:title]) || contains_filtered_word?(params[:description]) }, only: %i[show edit update destroy]
-  skip_before_action :authorize, only: [:index, :show]
+  before_action :set_project, only: %i[show edit update archive approve  destroy ]
+  before_action -> { contains_filtered_word?(params[:title]) || contains_filtered_word?(params[:description]) }, only: %i[show edit update archive approve destroy]
+  skip_before_action :authorize, only: [:index, :show, :approvedprojects]
   
   # GET /projects or /projects.json
   def index
@@ -38,14 +37,18 @@ class ProjectsController < ApplicationController
       return
     end
 
+     upload = Cloudinary::Uploader.upload(params[:image])
+
     project = @current_user.projects.create(
       title: params[:title],
       description: params[:description],
       is_public: params[:is_public],
       is_featured: params[:is_featured],
-      view_count: params[:view_count]
+      view_count: params[:view_count],
+      image_url: upload['secure_url']
     )
-    # project.user_id = @current_user.id
+
+    
 
     if project.valid?
       render json: project, status: :created
@@ -65,12 +68,16 @@ class ProjectsController < ApplicationController
         return
       end
 
+       upload = Cloudinary::Uploader.upload(params[:image])
+
       if project.update(
         title: params[:title],
         description: params[:description],
         is_public: params[:is_public],
         is_featured: params[:is_featured],
-        view_count: params[:view_count]
+        view_count: params[:view_count],
+        image_url: upload['secure_url']
+
       )
         render json: project, status: :created
       else
@@ -148,12 +155,13 @@ end
   private
   # Use callbacks to share common setup or constraints between actions.
   def set_project
-    project = Project.find(params[:id])
+    puts "Params ID: #{params[:id]}"
+    @project = Project.find(params[:id])
   end
 
   # Only allow a list of trusted parameters through.
   def project_params
-    params.require(:project).permit(:title, :description, :is_public, :is_featured, :view_count)
+    params.require(:project).permit(:title, :description, :is_public, :is_featured, :view_count, :image)
   end
 
 
@@ -169,7 +177,4 @@ end
 
       false
     end
-  # def unauthorized
-  #   render json: { "error": "not authorized" }, status: :unauthorized
-  # end
 end

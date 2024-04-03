@@ -36,7 +36,7 @@ end
 #     origins '*' # allow requests from ALL frontend origins (if you deploy your application, change this to only allow requests from YOUR frontend origin)
 #     resource '*', headers: :any, methods: [:get, :post, :delete, :put, :patch, :options, :head]
 #   end
-# end
+# end 
 
 run Rails.application
 Rails.application.load_server

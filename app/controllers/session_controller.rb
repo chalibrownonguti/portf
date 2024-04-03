@@ -30,3 +30,30 @@ class SessionController < ApplicationController
    end
 
 end
+
+
+# class SessionController < ApplicationController
+#   skip_before_action :authorize, only: [:signin]
+
+#   def signin
+#     user = User.find_by(email: params[:email])
+#     if user && user.authenticate(params[:password])
+#       session[:user_id] = user.id
+#       render json: { success: "signin success" }, status: :ok
+#     else
+#       render json: { error: "Invalid email or password" }, status: :unauthorized
+#     end
+#   end
+
+#   def signout
+#     session.delete(:user_id)
+#     render json: { success: "signout success" }, status: :ok
+#   end
+
+#   private
+
+#   def session_params
+#     params.permit(:email, :password)
+#   end
+# end
+
