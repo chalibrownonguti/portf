@@ -57,6 +57,21 @@ class ProjectsController < ApplicationController
     end
   end
 # end
+
+     def upload_image
+    project = Project.find(params[:id])
+
+    # Assuming you're using Cloudinary for image uploading based on previous code
+    upload = Cloudinary::Uploader.upload(params[:image])
+
+    if project.update(image_url: upload['secure_url'])
+      render json: project, status: :ok
+    else
+      render json: { errors: project.errors.full_messages }, status: :unprocessable_entity
+    end
+  end
+
+
   # PATCH/PUT /projects/1 or /projects/1.json
   def update
     project = Project.find_by(id: params[:id])
@@ -87,6 +102,10 @@ class ProjectsController < ApplicationController
       render json: { errors: "Project not found" }, status: :not_found
     end
   end
+
+      # POST /projects/:id/upload_image
+
+  
 
   #  archive project
 
